@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "ES2018",
+        "module": "nodenext",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "allowSyntheticDefaultImports": true,
+        "allowImportingTsExtensions": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "dist"
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ],
+    "ts-node": {
+        "compilerOptions": {
+            "module": "nodenext",
+        },
+        "esm": true,
+    },
+}
