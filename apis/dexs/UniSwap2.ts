@@ -14,9 +14,9 @@ import {
   nativeTokenToSell,
   maxgas,
   minNative,
-} from '../../config/Uniswapv2.ts';
+} from '../../config/UniSwap2.ts';
 import { ETHERprovider as provider } from '../../startConnection.ts';
-import { routerAbi, tokenAbi, multicallAbi } from '../../abis/Uniswap2.ts';
+import { routerAbi, tokenAbi, multicallAbi } from '../../abis/UniSwap2.ts';
 import type {
   HoneypotStatus,
   NotHoneypotLowLiquidity,
