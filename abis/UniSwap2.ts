@@ -7,7 +7,13 @@ export const routerAbi = [
     stateMutability: 'nonpayable',
     type: 'constructor',
   },
-  { inputs: [], name: 'WETH', outputs: [{ internalType: 'address', name: '', type: 'address' }], stateMutability: 'view', type: 'function' },
+  {
+    inputs: [],
+    name: 'WETH',
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
   {
     inputs: [
       { internalType: 'address', name: 'tokenA', type: 'address' },
@@ -46,7 +52,13 @@ export const routerAbi = [
     stateMutability: 'payable',
     type: 'function',
   },
-  { inputs: [], name: 'factory', outputs: [{ internalType: 'address', name: '', type: 'address' }], stateMutability: 'view', type: 'function' },
+  {
+    inputs: [],
+    name: 'factory',
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
   {
     inputs: [
       { internalType: 'uint256', name: 'amountOut', type: 'uint256' },
@@ -75,7 +87,9 @@ export const routerAbi = [
       { internalType: 'address[]', name: 'path', type: 'address[]' },
     ],
     name: 'getAmountsIn',
-    outputs: [{ internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' }],
+    outputs: [
+      { internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
@@ -85,7 +99,9 @@ export const routerAbi = [
       { internalType: 'address[]', name: 'path', type: 'address[]' },
     ],
     name: 'getAmountsOut',
-    outputs: [{ internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' }],
+    outputs: [
+      { internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
@@ -218,7 +234,9 @@ export const routerAbi = [
       { internalType: 'uint256', name: 'deadline', type: 'uint256' },
     ],
     name: 'swapETHForExactTokens',
-    outputs: [{ internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' }],
+    outputs: [
+      { internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' },
+    ],
     stateMutability: 'payable',
     type: 'function',
   },
@@ -230,7 +248,9 @@ export const routerAbi = [
       { internalType: 'uint256', name: 'deadline', type: 'uint256' },
     ],
     name: 'swapExactETHForTokens',
-    outputs: [{ internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' }],
+    outputs: [
+      { internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' },
+    ],
     stateMutability: 'payable',
     type: 'function',
   },
@@ -255,7 +275,9 @@ export const routerAbi = [
       { internalType: 'uint256', name: 'deadline', type: 'uint256' },
     ],
     name: 'swapExactTokensForETH',
-    outputs: [{ internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' }],
+    outputs: [
+      { internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' },
+    ],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -281,7 +303,9 @@ export const routerAbi = [
       { internalType: 'uint256', name: 'deadline', type: 'uint256' },
     ],
     name: 'swapExactTokensForTokens',
-    outputs: [{ internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' }],
+    outputs: [
+      { internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' },
+    ],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -307,7 +331,9 @@ export const routerAbi = [
       { internalType: 'uint256', name: 'deadline', type: 'uint256' },
     ],
     name: 'swapTokensForExactETH',
-    outputs: [{ internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' }],
+    outputs: [
+      { internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' },
+    ],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -320,7 +346,9 @@ export const routerAbi = [
       { internalType: 'uint256', name: 'deadline', type: 'uint256' },
     ],
     name: 'swapTokensForExactTokens',
-    outputs: [{ internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' }],
+    outputs: [
+      { internalType: 'uint256[]', name: 'amounts', type: 'uint256[]' },
+    ],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -345,10 +373,34 @@ export const tokenAbi = [
     stateMutability: 'view',
     type: 'function',
   },
-  { inputs: [], name: 'decimals', outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }], stateMutability: 'view', type: 'function' },
-  { inputs: [], name: 'name', outputs: [{ internalType: 'string', name: '', type: 'string' }], stateMutability: 'view', type: 'function' },
-  { inputs: [], name: 'symbol', outputs: [{ internalType: 'string', name: '', type: 'string' }], stateMutability: 'view', type: 'function' },
-  { inputs: [], name: '_maxTxAmount', outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }], stateMutability: 'view', type: 'function' },
+  {
+    inputs: [],
+    name: 'decimals',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'name',
+    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'symbol',
+    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: '_maxTxAmount',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
 ];
 
 export const multicallAbi = [

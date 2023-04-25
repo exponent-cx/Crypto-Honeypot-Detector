@@ -8,7 +8,8 @@ export const priceImp = 2;
 export const maxBuyFee = 10;
 export const maxSellFee = 10;
 
-export const MAX_UINT='115792089237316195423570985008687907853269984665640564039457584007913129639935'
+export const MAX_UINT =
+  '115792089237316195423570985008687907853269984665640564039457584007913129639935';
 
 // Http providers
 export const BSChttpprovider = 'https://bsc-dataseed.binance.org/';
