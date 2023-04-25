@@ -14,6 +14,49 @@ const mainTokentoSell = '0.001';
 const maxgas = 2000000;
 const minMain = 1;
 
+interface HoneypotStatus {
+    type: "HoneypotStatus";
+    isHoneypot: boolean;
+    buyFee: number | string;
+    sellFee: number | string;
+    buyGas: number | string;
+    sellGas: number | string;
+    maxTokenTransaction: number | string;
+    maxTokenTransactionMain: number | string;
+    tokenSymbol: string;
+    mainTokenSymbol: string;
+    priceImpact: string | number ;
+    problem: boolean;
+    extra: string | null;
+}
+
+interface NotHoneypotLowLiquidity {
+    type: "NotHoneypotLowLiquidity";
+    isHoneypot: false;
+    tokenSymbol: string;
+    mainTokenSymbol: string;
+    problem: true;
+    liquidity: true;
+    extra: 'Token liquidity is extremely low or has problems with the purchase!';
+}
+
+interface UnexpectedJsonError {
+    type: "UnexpectedJsonError";
+    error: true;
+}
+
+interface ContractDontExistError {
+    type: "ContractDontExistError";
+    ExError: true;
+    isHoneypot: false;
+    tokenSymbol: null;
+    mainTokenSymbol: string | null;
+    problem: true;
+    extra: 'Token probably destroyed itself or does not exist!';
+}
+
+type ResolvedHoneypot = HoneypotStatus | NotHoneypotLowLiquidity | UnexpectedJsonError | ContractDontExistError
+
 // ABIs
 const routerAbi = [
   {
@@ -557,7 +600,7 @@ function setDecimals(number: string, decimals: number) {
 }
 
 // Honeypot test
-async function testHoneypot(web3: any, tokenAddress: string, mainTokenAddress: string, routerAddress: string, multicallAddress: string, mainTokentoSell: string, maxgas: number, minMain: number) {
+async function testHoneypot(web3: any, tokenAddress: string, mainTokenAddress: string, routerAddress: string, multicallAddress: string, mainTokentoSell: string, maxgas: number, minMain: number): Promise<ResolvedHoneypot>{
   return new Promise(async (resolve) => {
     try {
       // Create contracts
@@ -769,6 +812,7 @@ async function testHoneypot(web3: any, tokenAddress: string, mainTokenAddress: s
 
         // Return the result
         resolve({
+          type: "HoneypotStatus",
           isHoneypot: honeypot,
           buyFee: buyTax,
           sellFee: sellTax,
@@ -781,39 +825,42 @@ async function testHoneypot(web3: any, tokenAddress: string, mainTokenAddress: s
           priceImpact: priceImpact < 0.0 ? '0.0' : priceImpact,
           problem: problem,
           extra: extra,
-        });
+        } as HoneypotStatus);
       } else {
         resolve({
+            type: "NotHoneypotLowLiquidity",
           isHoneypot: false,
           tokenSymbol: tokenSymbol,
           mainTokenSymbol: mainTokensymbol,
           problem: true,
           liquidity: true,
           extra: 'Token liquidity is extremely low or has problems with the purchase!',
-        });
+        } as NotHoneypotLowLiquidity);
       }
-    } catch (err) {
+    } catch (err: any) {
       if (err.message.includes('Invalid JSON')) {
         resolve({
+            type: "UnexpectedJsonError",
           error: true,
-        });
+        } as UnexpectedJsonError);
       } else {
         // Probably the contract is self-destructed
         resolve({
+            type: "ContractDontExistError",
           ExError: true,
           isHoneypot: false,
           tokenSymbol: null,
           mainTokenSymbol: mainTokensymbol,
           problem: true,
           extra: 'Token probably destroyed itself or does not exist!',
-        });
+        } as ContractDontExistError);
       }
     }
   });
 }
 
 // HoneypotPlus test
-async function testHoneypotPlus(web3: any, myToken: string, tokenAddress: string, mainTokenAddress: string, routerAddress: string, multicallAddress: string, mainTokentoSell: string, maxgas: number, minMain: number) {
+async function testHoneypotPlus(web3: any, myToken: string, tokenAddress: string, mainTokenAddress: string, routerAddress: string, multicallAddress: string, mainTokentoSell: string, maxgas: number, minMain: number): Promise<ResolvedHoneypot>{
   return new Promise(async (resolve) => {
     try {
       // Create contracts
@@ -953,8 +1000,8 @@ async function testHoneypotPlus(web3: any, myToken: string, tokenAddress: string
         var finalPrice = 0;
         var priceImpact = 0;
         try {
-          initialPrice = await amountOutAsk.call();
-          initialPrice = initialPrice[1];
+          const initPrice = await amountOutAsk.call();
+          initialPrice = initPrice[1];
         } catch (err) {}
 
         // Check if Token has Max Transaction amount
@@ -1052,6 +1099,7 @@ async function testHoneypotPlus(web3: any, myToken: string, tokenAddress: string
 
         // Return the result
         resolve({
+            type: "HoneypotStatus",
           isHoneypot: honeypot,
           buyFee: buyTax,
           sellFee: sellTax,
@@ -1064,32 +1112,35 @@ async function testHoneypotPlus(web3: any, myToken: string, tokenAddress: string
           priceImpact: priceImpact < 0.0 ? '0.0' : priceImpact,
           problem: problem,
           extra: extra,
-        });
+        } as HoneypotStatus);
       } else {
         resolve({
+            type: "NotHoneypotLowLiquidity",
           isHoneypot: false,
           tokenSymbol: tokenSymbol,
           mainTokenSymbol: mainTokensymbol,
           problem: true,
           liquidity: true,
           extra: 'Token liquidity is extremely low or has problems with the purchase!',
-        });
+        } as NotHoneypotLowLiquidity);
       }
-    } catch (err) {
+    } catch (err: any) {
       if (err.message.includes('Invalid JSON')) {
         resolve({
+            type: "UnexpectedJsonError",
           error: true,
-        });
+        } as UnexpectedJsonError);
       } else {
         // Probably the contract is self-destructed
         resolve({
+            type: "ContractDontExistError",
           ExError: true,
           isHoneypot: false,
           tokenSymbol: null,
           mainTokenSymbol: mainTokensymbol,
           problem: true,
           extra: 'Token probably destroyed itself or does not exist!',
-        });
+        } as ContractDontExistError);
       }
     }
   });
@@ -1099,33 +1150,64 @@ export async function main(req: Request, res: Response) {
   const tokenAddress = req.params.address;
   if (`${req.params.address2}`.toLowerCase() == mainTokenAddress.toLowerCase() || `${req.params.address2}`.toLowerCase() == 'default') {
     var honeypot = await testHoneypot(web3, tokenAddress, mainTokenAddress, routerAddress, multicallAddress, mainTokentoSell, maxgas, minMain);
-    if (honeypot.error)
-      return res.status(403).json({
-        error: true,
-        msg: 'Error testing the honeypot, retry!',
-      });
-    if (honeypot.ExError)
-      return res.status(404).json({
-        error: true,
-        data: honeypot,
-      });
-    res.json({
-      data: honeypot,
-    });
+      switch (honeypot.type) {
+          case 'UnexpectedJsonError':
+              return res.status(403).json({
+                  error: true,
+                  msg: 'Error testing the honeypot, retry!',
+              });
+          case 'ContractDontExistError':
+              return res.status(404).json({
+                  error: true,
+                  data: honeypot,
+              });
+          default:
+              res.json({
+                  data: honeypot,
+              });
+      }
+    // if (honeypot.error)
+    //   return res.status(403).json({
+    //     error: true,
+    //     msg: 'Error testing the honeypot, retry!',
+    //   });
+    // if (honeypot.ExError)
+    //   return res.status(404).json({
+    //     error: true,
+    //     data: honeypot,
+    //   });
+    // res.json({
+    //   data: honeypot,
+    // });
   } else {
       var honeypotPlus = await testHoneypotPlus(web3, req.params.address2, tokenAddress, mainTokenAddress, routerAddress, multicallAddress, mainTokentoSell, maxgas, minMain);
-    if (honeypotPlus.error)
-      return res.status(403).json({
-        error: true,
-        msg: 'Error testing the honeypot, retry!',
-      });
-    if (honeypotPlus.ExError)
-      return res.status(404).json({
-        error: true,
-        data: honeypotPlus,
-      });
-    res.json({
-      data: honeypotPlus,
-    });
+      switch (honeypotPlus.type) {
+          case 'UnexpectedJsonError':
+              return res.status(403).json({
+                  error: true,
+                  msg: 'Error testing the honeypot, retry!',
+              });
+          case 'ContractDontExistError':
+              return res.status(404).json({
+                  error: true,
+                  data: honeypotPlus,
+              });
+          res.json({
+              data: honeypotPlus,
+          });
+      }
+    // if (honeypotPlus.error)
+    //   return res.status(403).json({
+    //     error: true,
+    //     msg: 'Error testing the honeypot, retry!',
+    //   });
+    // if (honeypotPlus.ExError)
+    //   return res.status(404).json({
+    //     error: true,
+    //     data: honeypotPlus,
+    //   });
+    // res.json({
+    //   data: honeypotPlus,
+    // });
   }
 }
